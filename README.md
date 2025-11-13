@@ -6,8 +6,15 @@
 
 ### 1. Identify rules
 
-1. Flags
-	- Order: [TBD]
+There are 4 optional fields and 1 mandatory field, each in a specific order.
+Flags come first (#0- +), then width (a numerical value), then precision (a . followed optionally by a numerical value), then length (hh, h, l, ll, L, j, z, t), then the mandatory conversion specifier.
+
+1. Flags characters
+	- Order is irrelevant, the 5 flags can come in any order and are all technically compatible with any conversion. However, the compiler will throw warnings (or errors with -Werror) if you use a conversion specifier with flags that aren´t meant to be used with it ("undefined behavior").
+	- In our case, we can tolerate incompatible flags - they just won't have any effect (like compiling with the warnings anyway).
+	- The - flag overrides the 0 flag, and if both are used together again a warning is thrown. This case isn't "undefined behavior" and also works if you compile anyway. We can also just tolerate and ignore.
+	- The + flag overrides the ' ' flag, same exact as above. We can just tolerate it.
+	- The 0 and - flags act on the width value, which is still optional. In case of missing width value, I have no fucking clue what happens, fuck me.
 	- #
 		- alternate print
 		- works with o
@@ -18,11 +25,13 @@
 			- result always has a decimal point even if no digits follow
 			- for g and G, trailing zeros are not removed
 	- 0
-		- amount of zeros that should be added before a number
+		- causes field width value to add zeroes instead of spaces
+			- additionally, those zeroes are added right before the number itself e.g in case of preceding 0x or -
 		- default is 1
 		- if given precision is 0 and the number is 0, the output is empty
-		- works with d, i, o, u, x, X
+		- works with d, i, o, u, x, X, a, A, e, E, f, F, g, G
 		- overridden by - flag
+		- if a precision is given with d, i, o, u, x, X, the 0 flag is ignored
 	- -
 		- causes field width value to add spaces to the right instead of to the left (?)
 		- works with everything
@@ -36,19 +45,19 @@
 		- sign (+ or -) before a signed conversion
 		- works with d, i, a, A, e, E, f, F, g, G (?)
 		- overrides space flag
-	- .
-		- precision
+2. Width
+	- This always comes before the length modifier and after the flags
+		- 0 and - flags act on the width value, therefore the presence of a 0 flag means you can't add any space padding (- overrides 0)
+	- Optional decimal digit string (with nonzero first digit)
+	- Adds spaces to the left to pad strings with less bytes than the value
+3. Precision
 		- default is 6 if no . is present
 		- default is 0 if . is present but decimal digit is missing
 		- works with d, i, o, u, x, X (min number of digits to appear) (?)
 		- works with a, A, e, E, f, F (number of digits to appear after radix character)
 		- works with g, G (max number of significant digits) (?)
 		- works with s (max number of characters to be printed) (?)
-2. Width
-	- [TBD] See how - flag works with this, also see order
-	- Optional decimal digit string (with nonzero first digit)
-	- Adds spaces to the left to pad strings with less bytes than the value
-3. Length
+4. Length
 	- Order: the length modifier is always right before the conversion specifier
 	- hh
 		- signed or unsigned char instead of int or unsigned int
@@ -76,7 +85,7 @@
 	- t
 		- ptrdiff_t (?)
 		- works with d, i, o, u, x, X, n
-4. Conversions
+5. Conversions
 	- d, i
 		- int, easy
 	- o, u, x, X
