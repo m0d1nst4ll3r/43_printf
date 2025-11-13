@@ -6,12 +6,27 @@
 
 ### 1. Identify rules
 
-1. Conversions
+1. Flags
+	- #
+	- 0
+	- -
+	- ' '
+	- +
+2. Width
+3. Length
+	- hh
+	- h
+	- l
+	- ll
+	- L
+	- j
+	- z
+	- t
+4. Conversions
 	- c
 	- s
 	- d, i
-2. Length
-3. Flags
+
 
 ### 2. Design a structure that supports those rules
 
