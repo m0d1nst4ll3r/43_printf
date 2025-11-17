@@ -4,6 +4,8 @@
 
 ### 0. Understand va\_arg
 
+Apparently you're ok using va\_arg anywhere in your code as long as you're passing its address around, which we will since we'll be using a structure. Therefore, there's nothing much to understand beyond calling va\_start, va\_end, and then using va\_arg as needed.
+
 ### 1. Identify rules
 
 There are 4 optional fields and 1 mandatory field, each in a specific order.
@@ -139,9 +141,13 @@ Flags come first (#0- +), then width (a numerical value), then precision (a . fo
 	- m
 		- prints output of strerror(errno)
 		- no argument needed
+		- accepts flags, width works with this
+		- # flag makes this print errno instead of strerror(errno)
+			- errno's macro value is printed as string (like ENOENT) unless it is 0 (0 is printed)
 	- %
 		- prints %
 		- no argument needed
+		- flags are completely ignored (no warnings or errors, unlike all other conversions)
 
 ### 2. Design a structure that supports those rules
 
@@ -160,9 +166,76 @@ Flags come first (#0- +), then width (a numerical value), then precision (a . fo
 - If length is incompatible with conversion, also ignore
 
 - How to parse?
-	- Option 1: print on the fly, when reaching % parse it, send it to a function, print the result
-	- Option 2: write into a buffer, only print the buffer at the very end
-	- 
+	- Option 1: Naive approach, write one by one without malloc (no buffer, no malloc)
+		- This is a bad approach as calling write so much is slow and inefficient
+		- Also not thread safe (not everything is printed at once) meaning if two threads call ft_printf at the same time, characters can be commingled
+	- Option 2: Full buffer approach, malloc, write in malloc, print malloc'd string
+		- In this approach you need to know well in advance how many chars will be in your entire string
+		- After doing this, you still need to write your actual string, so you need to calculate twice
+		- This requires parsing through arguments with va_arg twice, and doing conversions twice
+		- I think this is annoying for no reason
+		- At least, it's super thread safe
+	- Option 3: Buffer approach with malloc but in chunks
+		- Same as before but you write in chunks of BUFFER_SIZE size e.g 1000, all linked through a chained list
+		- No need to know in advance, you will malloc by default a first chunk of 1000 and should you fill it, you malloc another
+		- Only needs to calculate once but even for a super short string, you will always malloc 1000
+		- One more malloc call for every 1000 bytes
+		- Has to write each chunk separately, which is not thread safe, unless you concatenate all your strings into one big one
+			- If you do that, that's a whole lot of copying for big strings = useless instructions, inefficient
+	- Option 4: Buffer approach but without malloc, flushing the buffer if it's full
+		- Statically allocated buffer (buf[BUFFER_SIZE]) with no mallocs whatsoever, when it's filled, it's written
+		- No mallocs, which makes it way simpler, but not thread safe at all (even less than option 3)
+	- Option 5: Static buffer followed by mallocs
+		- Static buffer by default (up to BUFFER_SIZE bytes) which then switches to a malloc if BUFFER_SIZE is too small
+		- Same problem as above, if we use a chained list we are not thread safe, if we concatenate everything into one big string we need to spend a lot of instructions on copying (very bad)
+	- No matter which option we choose, there are upsides and downsides and there will be "extra" instructions
+	- Writing one by one should always be avoided, but whether to write *everything* at once or not depends on which sacrifice you want to make
+	- Writing everything at once means you have to either copy a lot (chained list approach), or calculate in advance and re-calculate after (double parse approach)
+		- If you go for the copy approach, you can set a reasonably big buffer (e.g 1k) so that you should only copy in extremely rare cases where you have to print a humongous line
+		- If you go for the double parse approach, you also waste processing power, but at least you don't have to copy anything (I think copying is one of the slowest instructions)
+	- Writing in chunks is the simplest approach but might cause problems with multi-threading
+		- The simplest implementation for this approach is to have a fixed size buffer and just write when it's full
+		- Another possible implementation is to have a chained list and write each chunk in a chain at the end
+		- The difference will be that the 2nd one needs much less time between each write while the 1st one has to do some processing between each write
+		- But the 2nd one requires mallocs, which is annoying
+- The best options to me seem to be
+	1. Double parse approach (malloc one big buffer, then write into it)
+		- Advantages
+			- Writes once, not a very hard approach
+		- Disadvantages
+			- Gotta parse and process twice (using the same code)
+			- Uses malloc, but only once, which is ok
+	2. Chained list approach (one malloc every BUFFER\_SIZE bytes)
+		- Advantages
+			- Can also write once, but there will be copying involved
+			- Only has to parse once
+		- Disadvantages
+			- Uses multiple mallocs, annoying
+			- Copying feels really bad
+	3. Single static buffer approach (no mallocs at all)
+		- Advantages
+			- No mallocs at all
+			- Extremely simple concept
+		- Disadvantages
+			- Does multiple writes (one every BUFFER_SIZE)
+
+- How to convert?
+	- Converting is sorta annoying because due to field width, you need information obtained from converting values before you can print them
+	- You either need to process the conversion twice (once to know how many bytes in advance, once to write the result)
+	- Or you need to store the results of your first conversion somewhere
+		- This involves using malloc
+		- OR... using a fixed size array
+			- The only conversion that has a potentially infinite print is s
+			- All other conversions have to have a max size, or a size given by flags (like . for float)
+			- For s conversions, strlen is needed (double parse), for all the rest, we can use a static array
+			- e.g for d, the static array's max size is 12 (INT_MIN)
+			- for ld it will be more, etc...
+
+- How to handle length?
+	- One approach is to store any value in the biggest container possible e.g hhd, hd, d, ld, lld will all be contained in a long anyway (ps: what's ll if long long isn't a thing?)
+		- You will still need to call va_arg with a different type and/or cast that type (since va_arg's smallest type is int anyway)
+	- Another approach is to have entirely different functions for different lengths (e.g 5 functions (or 4?) for d: hhd hd d ld lld)
+	- Best approach seems to be #1
 
 ### 3. Design functions to verify and handle the rules
 
