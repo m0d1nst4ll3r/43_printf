@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:24:07 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/18 12:25:11 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/18 13:56:27 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,26 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 	while (i + 1 < n && array1[i] == array2[i])
 		i++;
 	return (array1[i] - array2[i]);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	char	*str;
+	size_t	i;
+
+	if (!s)
+		return (NULL);
+	str = (char *)s;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == (char)c)
+			return (str + i);
+		i++;
+	}
+	if (str[i] == (char)c)
+		return (str + i);
+	return (NULL);
 }
 
 // overflow proof, only does digits, no sign

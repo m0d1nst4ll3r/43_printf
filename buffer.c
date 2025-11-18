@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 18:17:52 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/17 19:47:34 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/18 14:33:57 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	flush_buf(t_printf *d)
 {
 	write(1, d->buf, d->buf_i);
+	d->tot_i += d->buf_i;
 	d->buf_i = 0;
 }
 

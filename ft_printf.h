@@ -6,14 +6,14 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:58:43 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/18 12:33:15 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/18 14:33:24 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-# define FTP_BSIZ	8120
+# define FTP_BSIZE	8120
 # define FTP_HASH	1
 # define FTP_ZERO	2
 # define FTP_DASH	4
@@ -27,6 +27,7 @@
 # define FTP_LEN_J	"j"
 # define FTP_LEN_Z	"z"
 # define FTP_LEN_T	"t"
+# define FTP_CONV	"diouxXeEfFgGaAcspnm%"
 
 # include <stdarg.h>
 # include <unistd.h>
@@ -61,37 +62,42 @@
 // buf_i is the index used with buf
 // str_i is the index used with the string received in arg
 // conv_i is the index used during conversion
+// tot_i is the total amount of chars printed thus far
 typedef struct s_printf
 {
-	const char	*s;
-	va_list		ap;
 	int			flags;
 	int			width;
 	int			prec;
 	char 		*len;
 	char		conv;
+	int			conv_i;
+
+	const char	*s;
+	va_list		ap;
 	char		buf[FTP_BSIZE];
 	int			buf_i;
 	int			str_i;
-	int			conv_i;
+	int			tot_i;
 }t_printf;
 
 // utils
 int		ft_memcmp(const void *, const void *, size_t);
-int		printf_atoi(t_printf *d, const char *s)
+char	*ft_strchr(const char *s, int c);
+int		printf_atoi(t_printf *d, const char *s);
 
 // buffer
 void	flush_buf(t_printf *d);
 void	write_buf(t_printf *d, char c);
 
-// flags, length
+// flags
 void	get_flags(t_printf *d);
 void	get_width(t_printf *d);
 void	get_prec(t_printf *d);
 void	get_len(t_printf *d);
 
-// flags
-
+// conv
+int		prepare_conv(t_printf *d);
+void	process_conv(t_printf *d);
 
 int	ft_printf(const char *s, ...);
 
