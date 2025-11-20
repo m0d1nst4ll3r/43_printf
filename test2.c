@@ -2,10 +2,8 @@
 
 int	main()
 {
-	long	d;
-	int		i;
+	int	i;
 
-	d = 5000000000;
-	i = d;
-	printf("%d\n", i);
+	i = 4;
+	printf("%d\n", i + (i < 0));
 }

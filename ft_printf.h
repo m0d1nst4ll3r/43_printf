@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:58:43 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/18 14:33:24 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/19 11:56:23 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,19 @@
 # define FTP_LEN_Z	"z"
 # define FTP_LEN_T	"t"
 # define FTP_CONV	"diouxXeEfFgGaAcspnm%"
+# define CONV_BSIZE	50
+
+# define HAS_HASH(n)	n & FTP_HASH
+# define HAS_ZERO(n)	n & FTP_ZERO
+# define HAS_DASH(n)	n & FTP_DASH
+# define HAS_SPACE(n)	n & FTP_SPCE
+# define HAS_PLUS(n)	n & FTP_PLUS
+# define HAS_SIGN(n)	(HAS_PLUS(n) || HAS_SPACE(n))
+# define HAS_WIDTH(n)	!(HAS_ZERO(n) || HAS_DASH(n))
+# define SIGN(v, n)		(v < 0 || HAS_SIGN(n))
 
 # include <stdarg.h>
+# include <stdint.h>
 # include <unistd.h>
 
 /*	Program steps:
@@ -81,8 +92,10 @@ typedef struct s_printf
 }t_printf;
 
 // utils
-int		ft_memcmp(const void *, const void *, size_t);
+int		ft_strncmp(const char *, const char *, size_t);
 char	*ft_strchr(const char *s, int c);
+int		ft_strlen(char *s);
+void	ft_strrev(char *s);
 int		printf_atoi(t_printf *d, const char *s);
 
 // buffer
@@ -95,10 +108,23 @@ void	get_width(t_printf *d);
 void	get_prec(t_printf *d);
 void	get_len(t_printf *d);
 
-// conv
+// convert
 int		prepare_conv(t_printf *d);
 void	process_conv(t_printf *d);
 
-int	ft_printf(const char *s, ...);
+// conv_utils
+void	print_sign(t_printf *d, intmax_t arg);
+void	print_string(t_printf *d, char *buf);
+void	print_char(t_printf *d, char c, int n);
+
+// conversion functions
+void	convert_di(t_printf *d);
+void	convert_c(t_printf *d);
+void	convert_s(t_printf *d);
+void	convert_x(t_printf *d);
+void	convert_p(t_printf *d);
+void	convert_pc(t_printf *d);
+
+int		ft_printf(const char *s, ...);
 
 #endif

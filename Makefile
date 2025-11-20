@@ -6,7 +6,7 @@
 #    By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/08 10:29:07 by rapohlen          #+#    #+#              #
-#    Updated: 2025/11/18 14:14:45 by rapohlen         ###   ########.fr        #
+#    Updated: 2025/11/18 18:49:16 by rapohlen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,13 @@ CFLAGS	= -Wall -Wextra -Werror
 
 SRCS	= ft_printf.c \
 		  flags.c \
-		  conv.c \
+		  convert.c \
+		  convert_di.c \
 		  utils.c \
-		  buffer.c
+		  buffer.c \
+		  utils.c \
+		  utils_libft.c \
+		  conv_utils.c
 
 OBJS	= $(SRCS:.c=.o)
 

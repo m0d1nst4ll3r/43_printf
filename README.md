@@ -98,7 +98,7 @@ Flags come first (#0- +), then width (a numerical value), then precision (a . fo
 	- o, u, x, X
 		- unsigned int converted to a different base
 		- o unsigned octal
-		- u unsigned decimal (what's the point?)
+		- u unsigned decimal
 		- x unsigned hexa with abcdef
 		- X unsigned hexa with ABCDEF
 	- e, E
@@ -229,7 +229,10 @@ Flags come first (#0- +), then width (a numerical value), then precision (a . fo
 			- All other conversions have to have a max size, or a size given by flags (like . for float)
 			- For s conversions, strlen is needed (double parse), for all the rest, we can use a static array
 			- e.g for d, the static array's max size is 12 (INT_MIN)
+			- for x, the max size is 8 + 1 (for sign) + 2 (for 0x)
 			- for ld it will be more, etc...
+	- For every conversion, the way to do the width can be different
+		- This means it might be smarter to simply handle the logic in the conversion function itself rather than do it before
 
 - How to handle length?
 	- One approach is to store any value in the biggest container possible e.g hhd, hd, d, ld, lld will all be contained in a long anyway (ps: what's ll if long long isn't a thing?)
@@ -239,11 +242,51 @@ Flags come first (#0- +), then width (a numerical value), then precision (a . fo
 
 ### 3. Design functions to verify and handle the rules
 
+Done
 
 ### 4. Design the main program (and decide on an implementation)
 
+Done
+
+Implementation is a fixed length buffer flushed when it's full (1k-8k size). This works much like printf.
 
 ### 5. Design the main conversion function
 
+Done
 
 ### 6. Design each different conv function
+
+Conv functions have steps:
+
+1. Acquire the arg depending on length (static func)
+
+2. Figure out how long the arg is for width and/or precision
+	- Again there's 2 ways to do this, you have to convert but
+		1. You can write the conversion somewhere. If you don't want to malloc you need a fixed length array, which won't work for s (though that's fine), and for floats (because of potentially infinite precision).
+			- For floats, since you know the precision in advance, you can figure out the length, but you also need to know how many digits there are BEFORE the decimal point so you do need to convert.
+		2. You can also not write the conversion anywhere and just do it a second time.
+			- This works for floats with prec but is a bit wasteful.
+
+### 7. On how to do floats
+
+A float on 4 bytes works like this
+
+seee eeee emmm mmmm mmmm mmmm mmmm mmmm
+
+s is the sign (0 positive 1 negative)
+
+e is the exponent (power of 2) going from -126 to 127 (take it as a unsigned char and substract 127)
+
+m is the mantissa
+
+a float is basically s * (2^e * (1 + m))
+
+m is calculated this way: the first bit is 2^(-1) the second bit is 2^(-2) etc... up to 2^(-23)
+
+E.g if the mantissa is 101 0000 0000 0000 0000 0101
+
+m is equal to 2^(-1) + 2^(-3) + 2^(-21) + 2^(-23)
+
+All of that is added to 1 then multiplied with 2^e (e between -126 and 127), then the sign is added
+
+E.g a float that's 1

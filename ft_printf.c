@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:57:25 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/18 14:34:05 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/18 14:43:27 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ int	ft_printf(const char *s, ...)
 	while (s[d.str_i])
 	{
 		if (s[d.str_i] == '%' && prepare_conv(&d))
+		{
 			process_conv(&d);
+			d.str_i += d.conv_i;
+		}
 		else
 		{
 			write_buf(&d, s[d.str_i]);
