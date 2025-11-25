@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:24:07 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/18 18:41:13 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/25 20:16:34 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,21 +75,9 @@ void	ft_strrev(char *s)
 	}
 }
 
-// overflow proof, only does digits, no sign
-int	printf_atoi(t_printf *d, const char *s)
+int	ft_abs(int n)
 {
-	int		res;
-	size_t	i;
-
-	i = 0;
-	res = 0;
-	while (s[i] >= '0' && s[i] <= '9')
-	{
-		if (i == 10 || res > 214748364 || (res == 214748364 && s[i] > '7'))
-			return (0);
-		res = res * 10 + s[i] - '0';
-		i++;
-	}
-	d->conv_i += i;
-	return (res);
+	if (n < 0)
+		return (-n);
+	return (n);
 }

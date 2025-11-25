@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:58:43 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/19 11:56:23 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/25 20:41:47 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,15 @@
 # define FTP_LEN_J	"j"
 # define FTP_LEN_Z	"z"
 # define FTP_LEN_T	"t"
-# define FTP_CONV	"diouxXeEfFgGaAcspnm%"
-# define CONV_BSIZE	50
+// Currently handling [diouxXcsp%]
+// Not handling [eEfFgGaAnm] (all floats, strerror, and printed)
+// TBD: n is easy, m is ok, float is hell
+// Obj: "diouxXeEfFgGaAcspnm%"
+# define FTP_CONV	"diouxXcsp%"
+# define FTP_HEX	"0123456789abcdef"
+// Arbitrary buffer size for number conversions (optimizing for single pass)
+// Enough for theoretical 256 bit integer
+# define CONV_BSIZE	100
 
 # define HAS_HASH(n)	n & FTP_HASH
 # define HAS_ZERO(n)	n & FTP_ZERO
@@ -44,12 +51,11 @@
 # include <unistd.h>
 
 /*	Program steps:
-* 
+*
 * 0. Note on buffer management
-* 	Throughout execution, we will write to the buffer constantly.
-* 	Whenever said buffer is full, we flush it (print everything).
-*	This is handled by its own function.
-* 1. Copy string into buf until encountering a %
+* 	Throughout execution, we will constantly write to the buffer
+* 	Whenever said buffer is full, we flush it (print everything)
+* 1. Write into buf until encountering a %
 * 2. At %, call flag, width, prec, length and conv-reading func
 * 	This fills flags, width, prec, len and conv values of the struct
 * 3. Then, use said values to call the correct conversion func
@@ -57,23 +63,22 @@
 * 	Incompatible len is ignored
 * 	Invalid conv is the only event in which we skip conversion
 * 	(in that case we simply print the % and continue parsing)
-* 4. The conversion func will decide on what to print (add to buf)
-* 	It will then advance the index & return to the parsing (step 1)
-* 
+* 4. The conversion func will decide on what to write into buf
+* 	It will then advance the index & return to parsing (step 1)
+*
+*	Struct:
+*
+*	flags	contains all flags (in bitwise)
+*	width	atoi'd field width (or 0 if empty)
+*	prec	atoi'd precision (or -1 if empty)
+*	len		length modifier in string format
+*	conv	conversion specifier in char format
+*	buf		fixed length array buffer - printed when full
+*	buf_i	index of buf
+*	str_i	index of arg string
+*	conv_i	index during conversion
+*	tot_i	number of bytes printed total
 */
-
-
-// flags contains all flags (in bitwise)
-// width is atoi'd width (or 0 if empty)
-// prec is atoi'd precision (or -1 if empty)
-// len is the length modifier in string format
-// conv is the conversion specifier in char format
-// buf is our fixed length array buffer
-//	it will be flushed (printed) when full
-// buf_i is the index used with buf
-// str_i is the index used with the string received in arg
-// conv_i is the index used during conversion
-// tot_i is the total amount of chars printed thus far
 typedef struct s_printf
 {
 	int			flags;
@@ -92,11 +97,24 @@ typedef struct s_printf
 }t_printf;
 
 // utils
+// libft - taken from libft
 int		ft_strncmp(const char *, const char *, size_t);
 char	*ft_strchr(const char *s, int c);
 int		ft_strlen(char *s);
 void	ft_strrev(char *s);
+int		ft_abs(int n);
+void	ft_strupper(char *s);
+// print - print helpers during conversion
+void	print_char(t_printf *d, char c, int n);
+void	print_string(t_printf *d, char *buf);
+void	print_sign(t_printf *d, intmax_t arg);
+void	print_width_int(t_printf *d, int arg_len);
+void	print_zero(t_printf *d, int arg_len);
+void	print_prec(t_printf *d, int arg_len);
+// printf - libft mods for printf
 int		printf_atoi(t_printf *d, const char *s);
+int		printf_itoa(intmax_t n, char *buf);
+int		printf_uitoa(uintmax_t n, char *buf);
 
 // buffer
 void	flush_buf(t_printf *d);
@@ -111,11 +129,6 @@ void	get_len(t_printf *d);
 // convert
 int		prepare_conv(t_printf *d);
 void	process_conv(t_printf *d);
-
-// conv_utils
-void	print_sign(t_printf *d, intmax_t arg);
-void	print_string(t_printf *d, char *buf);
-void	print_char(t_printf *d, char c, int n);
 
 // conversion functions
 void	convert_di(t_printf *d);

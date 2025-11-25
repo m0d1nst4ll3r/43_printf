@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:24:07 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/18 18:48:14 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/25 20:34:15 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,55 @@ int	printf_atoi(t_printf *d, const char *s)
 	}
 	d->conv_i += i;
 	return (res);
+}
+
+int	printf_itoa(intmax_t n, char *buf)
+{
+	int	i;
+
+	i = 0;
+	if (!n)
+		buf[i++] = '0';
+	while (n)
+	{
+		buf[i++] = ft_abs(n % 10) + '0';
+		n /= 10;
+	}
+	buf[i] = 0;
+	ft_strrev(buf);
+	return (i);
+}
+
+int	printf_uitoa(uintmax_t n, char *buf)
+{
+	int	i;
+
+	i = 0;
+	if (!n)
+		buf[i++] = '0';
+	while (n)
+	{
+		buf[i++] = n % 10 + '0';
+		n /= 10;
+	}
+	buf[i] = 0;
+	ft_strrev(buf);
+	return (i);
+}
+
+int	printf_tohex(uintmax_t n, char *buf)
+{
+	int	i;
+
+	i = 0;
+	if (!n)
+		buf[i++] = '0';
+	while (n)
+	{
+		buf[i++] = FTP_HEX[n % 16];
+		n /= 16;
+	}
+	buf[i] = 0;
+	ft_strrev(buf);
+	return (i);
 }

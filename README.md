@@ -1,15 +1,38 @@
 # 43\_printf
 
+## Progress
+
+Floats will take too much time, turning in without them and will work on them separately.
+
+Remaining:
+
+- Add c (easy)
+- Add s (easy)
+- Add % (easy)
+- Conv functions for diuxX (and p) done
+- Just finish sub-funcs for printing width etc...
+	- Width spaces (same for before/after, just condition the call)
+	- Sign | DONE
+	- Zero (either width or prec)
+	- Then finish funcs for diuxX
+- Conv function for o TBD
+	- Add o after, reuses work for diuxX
+
 ## Steps
 
 ### 0. Understand va\_arg
 
 Apparently you're ok using va\_arg anywhere in your code as long as you're passing its address around, which we will since we'll be using a structure. Therefore, there's nothing much to understand beyond calling va\_start, va\_end, and then using va\_arg as needed.
 
+Note: don't call va\_arg with types such as char or short, int is the smallest type you can recover with it.
+
 ### 1. Identify rules
 
 There are 4 optional fields and 1 mandatory field, each in a specific order.
+
 Flags come first (#0- +), then width (a numerical value), then precision (a . followed optionally by a numerical value), then length (hh, h, l, ll, L, j, z, t), then the mandatory conversion specifier.
+
+Note: there are more flags than just those 5, this is a bonus for later.
 
 1. Flag characters
 	- Order is irrelevant, the 5 flags can come in any order and are all technically compatible with any conversion. However, the compiler will throw warnings (or errors with -Werror) if you use a conversion specifier with flags that aren´t meant to be used with it ("undefined behavior").
@@ -289,4 +312,4 @@ m is equal to 2^(-1) + 2^(-3) + 2^(-21) + 2^(-23)
 
 All of that is added to 1 then multiplied with 2^e (e between -126 and 127), then the sign is added
 
-E.g a float that's 1
+Note: turning in without floats for now, will add later.
