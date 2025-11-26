@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:41:09 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/18 18:51:36 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:39:25 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static void	init_conv(t_printf *d)
 {
+	d->conv_sign = 0;
+	d->arg_len = 0;
 	d->conv_i = 1;
 	d->flags = 0;
 	d->width = 0;

@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include <stddef.h>
 
 int	main()
 {
-	printf(".%a.\n", 0.01);
+	printf(".% .0d.\n", 0);
 }

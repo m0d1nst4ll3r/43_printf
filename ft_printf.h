@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:58:43 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/25 20:41:47 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:35:54 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,17 @@
 // Obj: "diouxXeEfFgGaAcspnm%"
 # define FTP_CONV	"diouxXcsp%"
 # define FTP_HEX	"0123456789abcdef"
+# define FTP_NULL	"(null)"
+# define FTP_NIL	"(nil)"
 // Arbitrary buffer size for number conversions (optimizing for single pass)
 // Enough for theoretical 256 bit integer
 # define CONV_BSIZE	100
 
-# define HAS_HASH(n)	n & FTP_HASH
-# define HAS_ZERO(n)	n & FTP_ZERO
-# define HAS_DASH(n)	n & FTP_DASH
-# define HAS_SPACE(n)	n & FTP_SPCE
-# define HAS_PLUS(n)	n & FTP_PLUS
+# define HAS_HASH(n)	(n & FTP_HASH)
+# define HAS_ZERO(n)	(n & FTP_ZERO)
+# define HAS_DASH(n)	(n & FTP_DASH)
+# define HAS_SPACE(n)	(n & FTP_SPCE)
+# define HAS_PLUS(n)	(n & FTP_PLUS)
 # define HAS_SIGN(n)	(HAS_PLUS(n) || HAS_SPACE(n))
 # define HAS_WIDTH(n)	!(HAS_ZERO(n) || HAS_DASH(n))
 # define SIGN(v, n)		(v < 0 || HAS_SIGN(n))
@@ -68,16 +70,22 @@
 *
 *	Struct:
 *
-*	flags	contains all flags (in bitwise)
-*	width	atoi'd field width (or 0 if empty)
-*	prec	atoi'd precision (or -1 if empty)
-*	len		length modifier in string format
-*	conv	conversion specifier in char format
-*	buf		fixed length array buffer - printed when full
-*	buf_i	index of buf
-*	str_i	index of arg string
-*	conv_i	index during conversion
-*	tot_i	number of bytes printed total
+*	flags		contains all flags (in bitwise)
+*	width		atoi'd field width (or 0 if empty)
+*	prec		atoi'd precision (or -1 if empty)
+*	len			length modifier in string format
+*	conv		conversion specifier in char format
+*	conv_i		index during conversion
+*	conv_buf	buffer used for conversion
+*	conv_sign	sign character during conversion
+*	arg_len		(converted) arg length for conversion
+*
+*	s			format string passed to ft_printf
+*	ap			arg pointer
+*	buf			fixed length array buffer - printed when full
+*	buf_i		index of buf
+*	str_i		index of arg string
+*	tot_i		number of bytes printed total
 */
 typedef struct s_printf
 {
@@ -87,6 +95,9 @@ typedef struct s_printf
 	char 		*len;
 	char		conv;
 	int			conv_i;
+	char		conv_buf[CONV_BSIZE];
+	char		conv_sign;
+	int			arg_len;
 
 	const char	*s;
 	va_list		ap;
@@ -107,6 +118,7 @@ void	ft_strupper(char *s);
 // print - print helpers during conversion
 void	print_char(t_printf *d, char c, int n);
 void	print_string(t_printf *d, char *buf);
+void	print_nstring(t_printf *d, char *buf, int n);
 void	print_sign(t_printf *d, intmax_t arg);
 void	print_width_int(t_printf *d, int arg_len);
 void	print_zero(t_printf *d, int arg_len);

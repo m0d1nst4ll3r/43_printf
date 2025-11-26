@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:24:07 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/25 20:34:15 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/26 11:06:53 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,14 @@ int	printf_tohex(uintmax_t n, char *buf)
 	buf[i] = 0;
 	ft_strrev(buf);
 	return (i);
+}
+
+void	get_sign(t_printf *d, intmax_t arg)
+{
+	if (arg < 0)
+		d->conv_sign = '-';
+	else if (HAS_PLUS(d->flags))
+		d->conv_sign = '+';
+	else if (HAS_SPACE(d->flags))
+		d->conv_sign = ' ';
 }
