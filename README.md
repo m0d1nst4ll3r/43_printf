@@ -8,6 +8,7 @@ Remaining:
 
 - Add c (easy)
 - Add s (easy)
+- Add b for fun (binary, # adds a 0b)
 - Add % (easy)
 - Conv functions for diuxX (and p) done
 - Just finish sub-funcs for printing width etc...
@@ -33,6 +34,8 @@ There are 4 optional fields and 1 mandatory field, each in a specific order.
 Flags come first (#0- +), then width (a numerical value), then precision (a . followed optionally by a numerical value), then length (hh, h, l, ll, L, j, z, t), then the mandatory conversion specifier.
 
 Note: there are more flags than just those 5, this is a bonus for later.
+
+Note: there are also more conversions, such as 'b', absent in the man
 
 1. Flag characters
 	- Order is irrelevant, the 5 flags can come in any order and are all technically compatible with any conversion. However, the compiler will throw warnings (or errors with -Werror) if you use a conversion specifier with flags that aren´t meant to be used with it ("undefined behavior").

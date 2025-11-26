@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:56:44 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/26 11:19:02 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/26 15:09:33 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ static intmax_t	get_arg(t_printf *d)
 			return (va_arg(d->ap, long long));
 		if (!ft_strncmp(d->len, FTP_LEN_L, 1))
 			return (va_arg(d->ap, long long));
-		if (!ft_strncmp(d->len, FTP_LEN_Z, 1)
-			return (va_arg(d->ap, ssize_t);
+		if (!ft_strncmp(d->len, FTP_LEN_Z, 1))
+			return (va_arg(d->ap, ssize_t));
 		if (!ft_strncmp(d->len, FTP_LEN_J, 1))
-			return (va_arg(d->ap, intmax_t);
+			return (va_arg(d->ap, intmax_t));
 		if (!ft_strncmp(d->len, FTP_LEN_T, 1))
-			return (va_arg(d->ap, ptrdiff_t);
+			return (va_arg(d->ap, ptrdiff_t));
 	}
 	return (va_arg(d->ap, int));
 }
@@ -47,18 +47,19 @@ void	convert_di(t_printf *d)
 	intmax_t	arg;
 
 	arg = get_arg(d);
-	d->arg_len = printf_itoa(arg, d->conv_buf);
 	get_sign(d, arg);
+	if (d->prec || arg)
+		d->arg_len = printf_itoa(arg, d->conv_buf);
 	if (HAS_WIDTH(d->flags) && d->width > 0)
-		print_width(d, arg_len);
+		print_width(d);
 	if (d->conv_sign)
-		print_char(d, d->conv_sign, 1);
+		print_string(d, d->conv_sign);
 	if (HAS_ZERO(d->flags) && d->width > 0)
-		print_zero(d, arg_len);
+		print_zero(d);
 	if (d->prec > 0)
-		print_prec(d, arg_len);
+		print_prec(d);
 	if (d->prec || arg)
 		print_string(d, d->conv_buf);
 	if (HAS_DASH(d->flags) && d->width > 0)
-		print_width(d, arg_len);
+		print_width(d);
 }

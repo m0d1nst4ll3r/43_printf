@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:21:43 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/18 14:55:29 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/26 15:45:54 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,7 @@ void	get_len(t_printf *d)
 
 void	get_flags(t_printf *d)
 {
-	while (d->s[d->str_i + d->conv_i] == '#'
-		|| d->s[d->str_i + d->conv_i] == '0'
-		|| d->s[d->str_i + d->conv_i] == '-'
-		|| d->s[d->str_i + d->conv_i] == ' '
-		|| d->s[d->str_i + d->conv_i] == '+')
+	while (ft_strchr(FTP_FLAGS, d->s[d->str_i + d->conv_i]))
 	{
 		if (d->s[d->str_i + d->conv_i] == '#')
 			d->flags = d->flags | FTP_HASH;

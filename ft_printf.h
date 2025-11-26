@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:58:43 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/26 10:35:54 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/26 16:41:24 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,24 @@
 # define FTP_LEN_J	"j"
 # define FTP_LEN_Z	"z"
 # define FTP_LEN_T	"t"
-// Currently handling [diouxXcsp%]
+// Currently handling [#+- 0]
+// Not handling ['] (thousands grouping)
+# define FTP_FLAGS	"#+- 0"
+// Currently handling [diuboxXcsp%]
 // Not handling [eEfFgGaAnm] (all floats, strerror, and printed)
 // TBD: n is easy, m is ok, float is hell
-// Obj: "diouxXeEfFgGaAcspnm%"
-# define FTP_CONV	"diouxXcsp%"
+// Obj: "diuboxXeEfFgGaAcspnm%"
+# define FTP_CONV	"diuboxXcsp%"
 # define FTP_HEX	"0123456789abcdef"
+# define FTP_DEC	"0123456789"
+# define FTP_OCT	"01234567"
+# define FTP_BIN	"01"
 # define FTP_NULL	"(null)"
 # define FTP_NIL	"(nil)"
+# define FTP_NILLEN	5
+# define FTP_SPECX	"0x"
+# define FTP_SPECB	"0b"
+# define FTP_SPECO	"0"
 // Arbitrary buffer size for number conversions (optimizing for single pass)
 // Enough for theoretical 256 bit integer
 # define CONV_BSIZE	100
@@ -50,7 +60,10 @@
 
 # include <stdarg.h>
 # include <stdint.h>
+# include <stddef.h>
 # include <unistd.h>
+
+# include <stdio.h>
 
 /*	Program steps:
 *
@@ -77,7 +90,7 @@
 *	conv		conversion specifier in char format
 *	conv_i		index during conversion
 *	conv_buf	buffer used for conversion
-*	conv_sign	sign character during conversion
+*	conv_sign	sign/special character during conversion
 *	arg_len		(converted) arg length for conversion
 *
 *	s			format string passed to ft_printf
@@ -96,7 +109,7 @@ typedef struct s_printf
 	char		conv;
 	int			conv_i;
 	char		conv_buf[CONV_BSIZE];
-	char		conv_sign;
+	char		*conv_sign;
 	int			arg_len;
 
 	const char	*s;
@@ -119,14 +132,16 @@ void	ft_strupper(char *s);
 void	print_char(t_printf *d, char c, int n);
 void	print_string(t_printf *d, char *buf);
 void	print_nstring(t_printf *d, char *buf, int n);
+void	print_upper(t_printf *d, char *buf);
 void	print_sign(t_printf *d, intmax_t arg);
-void	print_width_int(t_printf *d, int arg_len);
-void	print_zero(t_printf *d, int arg_len);
-void	print_prec(t_printf *d, int arg_len);
+void	print_width(t_printf *d);
+void	print_zero(t_printf *d);
+void	print_prec(t_printf *d);
 // printf - libft mods for printf
 int		printf_atoi(t_printf *d, const char *s);
 int		printf_itoa(intmax_t n, char *buf);
-int		printf_uitoa(uintmax_t n, char *buf);
+int		printf_tobase(uintmax_t n, char *buf, char *base);
+void	get_sign(t_printf *d, intmax_t arg);
 
 // buffer
 void	flush_buf(t_printf *d);
@@ -146,9 +161,8 @@ void	process_conv(t_printf *d);
 void	convert_di(t_printf *d);
 void	convert_c(t_printf *d);
 void	convert_s(t_printf *d);
-void	convert_x(t_printf *d);
+void	convert_boux(t_printf *d);
 void	convert_p(t_printf *d);
-void	convert_pc(t_printf *d);
 
 int		ft_printf(const char *s, ...);
 

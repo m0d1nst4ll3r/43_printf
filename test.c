@@ -3,5 +3,5 @@
 
 int	main()
 {
-	printf(".% .0d.\n", 0);
+	printf(".%#01o.\n", 1);
 }
