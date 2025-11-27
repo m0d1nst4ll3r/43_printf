@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 15:03:44 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/27 11:33:13 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 12:27:45 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@ static void	*get_arg(t_printf *d)
 	return (va_arg(d->ap, void *));
 }
 
+// [     ][0x][7f3c0a][     ]
+//    |    |      |      |
+// [width] |      |   [width]
+//     [prefix] [val]
+// NULL pointer causes (nil) print
+// prefix is always present
+// 0, #, +, ' ' flags have no effect
 void	convert_p(t_printf *d)
 {
 	void	*arg;
