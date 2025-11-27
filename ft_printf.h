@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:58:43 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/27 11:39:45 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 12:05:52 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,6 @@ Using one int variable per flag would've been better
 # include <stdint.h>
 # include <stddef.h>
 # include <unistd.h>
-
-# include <stdio.h>
 
 /*	Program steps:
 *
