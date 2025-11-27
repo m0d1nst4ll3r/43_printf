@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:41:09 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/27 11:16:32 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:40:34 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ static void	init_conv(t_printf *d)
 //	during conversion, so we do it beforehand
 static void	curate_flags(t_printf *d)
 {
-	if (HAS_ZERO(d->flags) && HAS_DASH(d->flags))
+	if ((d->flags & FTP_ZERO) && (d->flags & FTP_DASH))
 		d->flags = d->flags & ~FTP_ZERO;
-	if (HAS_ZERO(d->flags) && d->prec != -1 && ft_strchr("dibouxX", d->conv))
+	if ((d->flags & FTP_ZERO) && d->prec != -1 && ft_strchr("dibouxX", d->conv))
 		d->flags = d->flags & ~FTP_ZERO;
-	if (HAS_SPACE(d->flags) && HAS_PLUS(d->flags))
+	if ((d->flags & FTP_SPCE) && (d->flags & FTP_PLUS))
 		d->flags = d->flags & ~FTP_SPCE;
 }
 

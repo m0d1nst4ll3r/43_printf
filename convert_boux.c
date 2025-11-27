@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 12:39:03 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/27 11:17:05 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:29:45 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ static uintmax_t	get_arg(t_printf *d)
 //		b. Value is not 0 AND width or precision did not add any preceding 0
 void	get_sign_o(t_printf *d, uintmax_t arg)
 {
-	if (HAS_HASH(d->flags))
+	if ((d->flags & FTP_HASH))
 	{
 		if (!arg && d->prec == 0)
 			d->conv_sign = FTP_SPECO;
 		else if (arg)
 		{
 			if (d->prec <= d->arg_len
-				&& (!HAS_ZERO(d->flags) || d->width <= d->arg_len))
+				&& (!(d->flags & FTP_ZERO) || d->width <= d->arg_len))
 				d->conv_sign = FTP_SPECO;
 		}
 	}
@@ -64,7 +64,7 @@ static void	convert_boux_2(t_printf *d, uintmax_t arg)
 		else
 			print_string(d, d->conv_sign);
 	}
-	if (HAS_ZERO(d->flags) && d->width > 0)
+	if ((d->flags & FTP_ZERO) && d->width > 0)
 		print_zero(d);
 	if (d->prec > 0)
 		print_prec(d);
@@ -75,7 +75,7 @@ static void	convert_boux_2(t_printf *d, uintmax_t arg)
 		else
 			print_string(d, d->conv_buf);
 	}
-	if (HAS_DASH(d->flags) && d->width > 0)
+	if ((d->flags & FTP_DASH) && d->width > 0)
 		print_width(d);
 }
 
@@ -108,7 +108,7 @@ void	convert_boux(t_printf *d)
 		get_sign_o(d, arg);
 	else
 		get_sign(d, arg);
-	if (HAS_WIDTH(d->flags) && d->width > 0)
+	if (!(d->flags & FTP_ZERO || d->flags & FTP_DASH) && d->width > 0)
 		print_width(d);
 	convert_boux_2(d, arg);
 }

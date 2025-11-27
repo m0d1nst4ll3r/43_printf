@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:58:43 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/27 11:22:34 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:39:45 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,20 @@
 // Arbitrary buffer size for number conversions (optimizing for single pass)
 // Enough for theoretical 256 bit integer
 # define CONV_BSIZE	100
-
-/*# define HAS_HASH(n)	(n & FTP_HASH)
+/*
+Old defines, had to remove because of norm
+In retrospect without these defines using bitwise is bad
+Using one int variable per flag would've been better
+# define HAS_HASH(n)	(n & FTP_HASH)
 # define HAS_ZERO(n)	(n & FTP_ZERO)
 # define HAS_DASH(n)	(n & FTP_DASH)
 # define HAS_SPACE(n)	(n & FTP_SPCE)
 # define HAS_PLUS(n)	(n & FTP_PLUS)
 # define HAS_SIGN(n)	(HAS_PLUS(n) || HAS_SPACE(n))
 # define HAS_WIDTH(n)	!(HAS_ZERO(n) || HAS_DASH(n))
-# define SIGN(v, n)		(v < 0 || HAS_SIGN(n))*/
+# define SIGN(v, n)		(v < 0 || HAS_SIGN(n))
+*/
+
 # include <stdarg.h>
 # include <stdint.h>
 # include <stddef.h>

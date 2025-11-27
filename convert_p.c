@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 15:03:44 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/26 16:22:20 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:33:13 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	convert_p(t_printf *d)
 	d->arg_len = FTP_NILLEN;
 	if (arg)
 		d->arg_len = printf_tobase((uintmax_t)arg, d->conv_buf, FTP_HEX);
-	if (HAS_WIDTH(d->flags) && d->width > 0)
+	if (!(d->flags & FTP_ZERO || d->flags & FTP_DASH) && d->width > 0)
 		print_width(d);
 	if (d->conv_sign)
 		print_string(d, d->conv_sign);
@@ -34,6 +34,6 @@ void	convert_p(t_printf *d)
 		print_string(d, d->conv_buf);
 	else
 		print_string(d, FTP_NIL);
-	if (HAS_DASH(d->flags) && d->width > 0)
+	if ((d->flags & FTP_DASH) && d->width > 0)
 		print_width(d);
 }

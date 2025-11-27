@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:24:07 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/26 16:44:25 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:34:48 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,16 +75,16 @@ void	get_sign(t_printf *d, intmax_t arg)
 	{
 		if (arg < 0)
 			d->conv_sign = "-";
-		else if (HAS_PLUS(d->flags))
+		else if ((d->flags & FTP_PLUS))
 			d->conv_sign = "+";
-		else if (HAS_SPACE(d->flags))
+		else if ((d->flags & FTP_SPCE))
 			d->conv_sign = " ";
 	}
 	else if (arg)
 	{
 		if (d->conv == 'p')
 			d->conv_sign = FTP_SPECX;
-		else if (HAS_HASH(d->flags))
+		else if ((d->flags & FTP_HASH))
 		{
 			if (d->conv == 'x' || d->conv == 'X')
 				d->conv_sign = FTP_SPECX;
