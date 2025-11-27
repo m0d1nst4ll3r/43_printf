@@ -1,49 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_print.c                                      :+:      :+:    :+:   */
+/*   utils_print2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/25 20:36:49 by rapohlen          #+#    #+#             */
+/*   Created: 2025/11/27 11:17:36 by rapohlen          #+#    #+#             */
 /*   Updated: 2025/11/27 11:18:06 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	print_string(t_printf *d, char *buf)
+void	print_width(t_printf *d)
 {
-	while (*buf)
-		write_buf(d, *buf++);
+	int	tot;
+
+	tot = d->arg_len;
+	if (d->prec > d->arg_len)
+		tot = d->prec;
+	if (d->conv_sign)
+		tot += ft_strlen(d->conv_sign);
+	if (d->width > tot)
+		print_char(d, ' ', d->width - tot);
 }
 
-void	print_nstring(t_printf *d, char *buf, int n)
+void	print_zero(t_printf *d)
 {
-	int	i;
+	int	tot;
 
-	i = 0;
-	while (i++ < n && *buf)
-		write_buf(d, *buf++);
+	tot = d->arg_len;
+	if (d->conv_sign)
+		tot += ft_strlen(d->conv_sign);
+	if (d->width > tot)
+		print_char(d, '0', d->width - tot);
 }
 
-void	print_upper(t_printf *d, char *buf)
+void	print_prec(t_printf *d)
 {
-	while (*buf)
-	{
-		if (*buf >= 'a' && *buf <= 'z')
-			write_buf(d, *buf + ('A' - 'a'));
-		else
-			write_buf(d, *buf);
-		buf++;
-	}
-}
-
-void	print_char(t_printf *d, char c, int n)
-{
-	while (n)
-	{
-		write_buf(d, c);
-		n--;
-	}
+	if (d->prec > d->arg_len)
+		print_char(d, '0', d->prec - d->arg_len);
 }

@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:41:09 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/26 15:18:02 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:16:32 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	curate_flags(t_printf *d)
 {
 	if (HAS_ZERO(d->flags) && HAS_DASH(d->flags))
 		d->flags = d->flags & ~FTP_ZERO;
-	if (HAS_ZERO(d->flags) && d->prec != -1	&& ft_strchr("dibouxX", d->conv))
+	if (HAS_ZERO(d->flags) && d->prec != -1 && ft_strchr("dibouxX", d->conv))
 		d->flags = d->flags & ~FTP_ZERO;
 	if (HAS_SPACE(d->flags) && HAS_PLUS(d->flags))
 		d->flags = d->flags & ~FTP_SPCE;
@@ -66,8 +66,5 @@ void	process_conv(t_printf *d)
 	else if (d->conv == 'p')
 		convert_p(d);
 	else if (d->conv == '%')
-	{
-		d->conv_i += 2;
 		write_buf(d, '%');
-	}
 }

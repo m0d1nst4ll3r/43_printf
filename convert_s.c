@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 09:58:36 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/26 15:58:37 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:08:34 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,17 @@ static char	*get_arg(t_printf *d)
 // [width] [str] [width]
 // NULL str produces (null)
 // str limited by precision
+// (null) with prec less than 6 suppresses (null) entirely
+// ^ this is implementation specific, only doing this to comply with
+//	 testers and printf's implementation on 42 school computers
 void	convert_s(t_printf *d)
 {
 	char	*arg;
 	int		arg_len;
 
 	arg = get_arg(d);
+	if (!arg && d->prec != -1 && d->prec < FTP_NULLEN)
+		d->prec = 0;
 	if (!arg)
 		arg = FTP_NULL;
 	arg_len = printf_strlen(arg, d->prec);

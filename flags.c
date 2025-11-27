@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:21:43 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/26 15:45:54 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:19:16 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ void	get_len(t_printf *d)
 	s = d->s + d->str_i + d->conv_i;
 	if (!ft_strncmp(s, FTP_LEN_HH, 2))
 	{
-		d->conv_i+= 2;
+		d->conv_i += 2;
 		d->len = FTP_LEN_HH;
 	}
 	else if (!ft_strncmp(s, FTP_LEN_LL, 2))
 	{
-		d->conv_i+= 2;
+		d->conv_i += 2;
 		d->len = FTP_LEN_LL;
 	}
 	else if (!ft_strncmp(s, FTP_LEN_H, 1))

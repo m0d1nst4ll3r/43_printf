@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:58:43 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/26 16:41:24 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:22:34 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,10 @@
 # define FTP_OCT	"01234567"
 # define FTP_BIN	"01"
 # define FTP_NULL	"(null)"
+# define FTP_NULLEN	6
 # define FTP_NIL	"(nil)"
 # define FTP_NILLEN	5
+# define FTP_EMPTY	""
 # define FTP_SPECX	"0x"
 # define FTP_SPECB	"0b"
 # define FTP_SPECO	"0"
@@ -49,15 +51,14 @@
 // Enough for theoretical 256 bit integer
 # define CONV_BSIZE	100
 
-# define HAS_HASH(n)	(n & FTP_HASH)
+/*# define HAS_HASH(n)	(n & FTP_HASH)
 # define HAS_ZERO(n)	(n & FTP_ZERO)
 # define HAS_DASH(n)	(n & FTP_DASH)
 # define HAS_SPACE(n)	(n & FTP_SPCE)
 # define HAS_PLUS(n)	(n & FTP_PLUS)
 # define HAS_SIGN(n)	(HAS_PLUS(n) || HAS_SPACE(n))
 # define HAS_WIDTH(n)	!(HAS_ZERO(n) || HAS_DASH(n))
-# define SIGN(v, n)		(v < 0 || HAS_SIGN(n))
-
+# define SIGN(v, n)		(v < 0 || HAS_SIGN(n))*/
 # include <stdarg.h>
 # include <stdint.h>
 # include <stddef.h>
@@ -105,7 +106,7 @@ typedef struct s_printf
 	int			flags;
 	int			width;
 	int			prec;
-	char 		*len;
+	char		*len;
 	char		conv;
 	int			conv_i;
 	char		conv_buf[CONV_BSIZE];
@@ -122,7 +123,7 @@ typedef struct s_printf
 
 // utils
 // libft - taken from libft
-int		ft_strncmp(const char *, const char *, size_t);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_strchr(const char *s, int c);
 int		ft_strlen(char *s);
 void	ft_strrev(char *s);

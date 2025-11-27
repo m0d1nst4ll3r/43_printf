@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 12:39:03 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/26 17:51:29 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:17:05 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	get_sign_o(t_printf *d, uintmax_t arg)
 			d->conv_sign = FTP_SPECO;
 		else if (arg)
 		{
-			if (d->prec <= d->arg_len &&
-				(!HAS_ZERO(d->flags) || d->width <= d->arg_len))
+			if (d->prec <= d->arg_len
+				&& (!HAS_ZERO(d->flags) || d->width <= d->arg_len))
 				d->conv_sign = FTP_SPECO;
 		}
 	}

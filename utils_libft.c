@@ -6,7 +6,7 @@
 /*   By: rapohlen <rapohlen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:24:07 by rapohlen          #+#    #+#             */
-/*   Updated: 2025/11/25 20:16:34 by rapohlen         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:23:11 by rapohlen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-int		ft_strlen(char *s)
+int	ft_strlen(char *s)
 {
 	int	i;
 
